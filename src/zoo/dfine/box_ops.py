@@ -42,6 +42,29 @@ def box_iou(boxes1: Tensor, boxes2: Tensor):
     return iou, union
 
 
+# def generalized_box_iou(boxes1, boxes2):
+#     """
+#     Generalized IoU from https://giou.stanford.edu/
+
+#     The boxes should be in [x0, y0, x1, y1] format
+
+#     Returns a [N, M] pairwise matrix, where N = len(boxes1)
+#     and M = len(boxes2)
+#     """
+#     # degenerate boxes gives inf / nan results
+#     # so do an early check
+#     assert (boxes1[:, 2:] >= boxes1[:, :2]).all()
+#     assert (boxes2[:, 2:] >= boxes2[:, :2]).all()
+#     iou, union = box_iou(boxes1, boxes2)
+
+#     lt = torch.min(boxes1[:, None, :2], boxes2[:, :2])
+#     rb = torch.max(boxes1[:, None, 2:], boxes2[:, 2:])
+
+#     wh = (rb - lt).clamp(min=0)  # [N,M,2]
+#     area = wh[:, :, 0] * wh[:, :, 1]
+
+#     return iou - (area - union) / area
+
 def generalized_box_iou(boxes1, boxes2):
     """
     Generalized IoU from https://giou.stanford.edu/
@@ -51,10 +74,14 @@ def generalized_box_iou(boxes1, boxes2):
     Returns a [N, M] pairwise matrix, where N = len(boxes1)
     and M = len(boxes2)
     """
-    # degenerate boxes gives inf / nan results
-    # so do an early check
-    assert (boxes1[:, 2:] >= boxes1[:, :2]).all()
-    assert (boxes2[:, 2:] >= boxes2[:, :2]).all()
+    # Đảm bảo tọa độ hợp lệ bằng cách hoán đổi giá trị nếu cần
+    boxes1[:, :2], boxes1[:, 2:] = torch.min(boxes1[:, :2], boxes1[:, 2:]), torch.max(boxes1[:, :2], boxes1[:, 2:])
+    boxes2[:, :2], boxes2[:, 2:] = torch.min(boxes2[:, :2], boxes2[:, 2:]), torch.max(boxes2[:, :2], boxes2[:, 2:])
+
+    # Kiểm tra lại điều kiện assert
+    assert (boxes1[:, 2:] >= boxes1[:, :2]).all(), f"Invalid boxes1: {boxes1}"
+    assert (boxes2[:, 2:] >= boxes2[:, :2]).all(), f"Invalid boxes2: {boxes2}"
+
     iou, union = box_iou(boxes1, boxes2)
 
     lt = torch.min(boxes1[:, None, :2], boxes2[:, :2])
@@ -64,6 +91,7 @@ def generalized_box_iou(boxes1, boxes2):
     area = wh[:, :, 0] * wh[:, :, 1]
 
     return iou - (area - union) / area
+
 
 
 def masks_to_boxes(masks):
