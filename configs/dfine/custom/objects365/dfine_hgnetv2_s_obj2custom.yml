@@ -49,14 +49,14 @@ optimizer:
   weight_decay: 0.000125
 
 
-epoches: 64 # Early stop
+epoches: 20 # Early stop
 train_dataloader:
   dataset:
     transforms:
       policy:
-        epoch: 56
+        epoch: 16
   collate_fn:
-    stop_epoch: 56
+    stop_epoch: 16
     ema_restart_decay: 0.9999
     base_size_repeat: 10
 
