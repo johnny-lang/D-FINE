@@ -59,13 +59,14 @@ class DetSolver(BaseSolver):
 
             if epoch == self.train_dataloader.collate_fn.stop_epoch:
                 checkpoint_path = str(self.output_dir / "new_checkpoint.pth")  
-                torch.save(self.state_dict(), checkpoint_path)
-                print("Checkpoint at path: {}".format(checkpoint_path))
+                # addd this
+                
+                # torch.save(self.state_dict(), checkpoint_path)
+                # print("Checkpoint at path: {}".format(checkpoint_path))
                 if os.path.exists(checkpoint_path):
                     self.load_resume_state(checkpoint_path)
                 else:
                     torch.save(self.state_dict(), checkpoint_path)
-
                     print("Checkpoint at path: {}".format(checkpoint_path))
                 self.ema.decay = self.train_dataloader.collate_fn.ema_restart_decay
                 print(f"Refresh EMA at epoch {epoch} with decay {self.ema.decay}")
