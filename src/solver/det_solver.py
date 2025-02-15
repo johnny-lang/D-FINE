@@ -61,8 +61,8 @@ class DetSolver(BaseSolver):
                 checkpoint_path = str(self.output_dir / "new_checkpoint.pth")  
                 # addd this
                 
-                # torch.save(self.state_dict(), checkpoint_path)
-                # print("Checkpoint at path: {}".format(checkpoint_path))
+                torch.save(self.state_dict(), checkpoint_path)
+                print("Checkpoint at path: {}".format(checkpoint_path))
                 if os.path.exists(checkpoint_path):
                     self.load_resume_state(checkpoint_path)
                 else:

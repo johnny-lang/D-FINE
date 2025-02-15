@@ -1,0 +1,2 @@
+thay đổi cái file yml cho class thành 80, epcoh và batchsize
+thay đổi logic file det_solver trong src/solver dòng 267 đổi logic lưu file pth
