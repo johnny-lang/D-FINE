@@ -11,6 +11,7 @@ import json
 import time
 
 import torch
+import os
 
 from ..misc import dist_utils, stats
 from ._solver import BaseSolver
@@ -57,7 +58,11 @@ class DetSolver(BaseSolver):
                 self.train_dataloader.sampler.set_epoch(epoch)
 
             if epoch == self.train_dataloader.collate_fn.stop_epoch:
-                self.load_resume_state(str(self.output_dir / "best_stg1.pth"))
+                checkpoint_path = str(self.output_dir / "new_checkpoint.pth")  
+                if os.path.exists(checkpoint_path):
+                    self.load_resume_state(checkpoint_path)
+                else:
+                    torch.save(self.state_dict(), checkpoint_path)
                 self.ema.decay = self.train_dataloader.collate_fn.ema_restart_decay
                 print(f"Refresh EMA at epoch {epoch} with decay {self.ema.decay}")
 
