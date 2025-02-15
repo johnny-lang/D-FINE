@@ -63,6 +63,8 @@ class DetSolver(BaseSolver):
                     self.load_resume_state(checkpoint_path)
                 else:
                     torch.save(self.state_dict(), checkpoint_path)
+                    print("Save new checkpoint at epoch {}".format(epoch))
+                    print("Checkpoint at path: {}".format(checkpoint_path))
                 self.ema.decay = self.train_dataloader.collate_fn.ema_restart_decay
                 print(f"Refresh EMA at epoch {epoch} with decay {self.ema.decay}")
 
