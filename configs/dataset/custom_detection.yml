@@ -4,21 +4,21 @@ evaluator:
   type: CocoEvaluator
   iou_types: ['bbox', ]
 
-num_classes: 80 # your dataset classes
+num_classes: 21  # your dataset classes
 remap_mscoco_category: False
 
 train_dataloader:
   type: DataLoader
   dataset:
     type: CocoDetection
-    img_folder: /kag
-    ann_file: /kaggle/w
+    img_folder: /kaggle/working/D-FINE/PASCAL-VOC-2007-1/train
+    ann_file: /kaggle/working/D-FINE/PASCAL-VOC-2007-1/train/_annotations.coco.json
     return_masks: False
     transforms:
       type: Compose
       ops: ~
   shuffle: True
-  num_workers: 2
+  num_workers: 4 
   drop_last: True
   collate_fn:
     type: BatchImageCollateFunction
@@ -28,14 +28,14 @@ val_dataloader:
   type: DataLoader
   dataset:
     type: CocoDetection
-    img_folder: /kagg
-    ann_file: /ka
+    img_folder: /kaggle/working/D-FINE/PASCAL-VOC-2007-1/valid
+    ann_file: /kaggle/working/D-FINE/PASCAL-VOC-2007-1/valid/_annotations.coco.json
     return_masks: False
     transforms:
       type: Compose
       ops: ~
   shuffle: False
-  num_workers: 2 
+  num_workers: 4  
   drop_last: False
   collate_fn:
     type: BatchImageCollateFunction
